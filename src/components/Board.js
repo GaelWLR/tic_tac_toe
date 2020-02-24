@@ -23,7 +23,7 @@ function initBoard(size) {
 }
 
 /**
- * Return an array representing the inital state of the board
+ * Return an array representing the inital state of the board transposed to easily determine win and equality
  * @param {number} size
  */
 function initTransposedBoard(size) {
