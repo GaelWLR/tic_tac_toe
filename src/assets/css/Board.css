@@ -1,0 +1,40 @@
+.board {
+  margin: 0 auto;
+  border: 1px solid black;
+  width: max-content;
+  background: white;
+}
+
+.board-row {
+  height: var(--box-size);
+}
+
+.board-box {
+  display: inline-flex;
+  height: var(--box-size);
+  width: var(--box-size);
+  border: 1px solid black;
+}
+
+.box-playerOne {
+  background: url('../icons/times.svg') no-repeat center;
+  background-size: calc(var(--box-size) - 20px);
+}
+
+.box-playerTwo {
+  background: url('../icons/circle.svg') no-repeat center;
+  background-size: calc(var(--box-size) - 20px);
+}
+
+.game-result-text {
+  text-align: center;
+  margin: 20px 0;
+}
+
+#confetti {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+}
