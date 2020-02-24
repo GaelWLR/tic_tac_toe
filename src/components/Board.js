@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import '../assets/css/Board.css'
-import ConfettiGenerator from 'confetti-js'
-import useWindowSize from './../hooks/useWindowSize'
 import BoardRow from './BoardRow'
 import GameResult from './GameResult'
+import useWindowSize from './../hooks/useWindowSize'
+import ConfettiGenerator from 'confetti-js'
 
 /**
  * Return an array representing the inital state of the board
  * @param {number} size
  */
-function setInitialBoard(size) {
+function initBoard(size) {
   const board = []
   for (let x = 0; x < size; x++) {
     const row = []
@@ -22,8 +22,22 @@ function setInitialBoard(size) {
   return board
 }
 
-const playerOne = 'playerOne'
-const playerTwo = 'playerTwo'
+/**
+ * Return an array representing the inital state of the board
+ * @param {number} size
+ */
+function initTransposedBoard(size) {
+  const transposedBoard = []
+  const transposedBoardSize = size * 2 + 2
+  for (let x = 0; x < transposedBoardSize; x++) {
+    const row = []
+    for (let y = 0; y < size; y++) {
+      row.push(null)
+    }
+    transposedBoard.push(row)
+  }
+  return transposedBoard
+}
 
 /**
  * Render the game board
@@ -32,12 +46,16 @@ const playerTwo = 'playerTwo'
  */
 function Board({ size }) {
   const minRoundBeforeWin = size * 2 - 1
-  const maxRound = size * size
+  const backSlashIndex = size * 2
+  const slashIndex = size * 2 + 1
+  const playerOne = 'playerOne'
+  const playerTwo = 'playerTwo'
 
   const [round, setRound] = useState(1)
-  const [playerRound, setPlayerRound] = useState('playerOne')
+  const [playerRound, setPlayerRound] = useState(playerOne)
   const [winner, setWinner] = useState(null)
-  const [board, setBoard] = useState(setInitialBoard(size))
+  const [board, setBoard] = useState(initBoard(size))
+  const [transposedBoard, setTransposedBoard] = useState(initTransposedBoard(size))
   const [width, height] = useWindowSize()
 
   const handleClick = ({ target }) => {
@@ -57,80 +75,42 @@ function Board({ size }) {
     board[x][y] = playerRound
     setBoard(board)
 
+    fillTransposedBoard(x, y)
+
     const canGameEnd = round >= minRoundBeforeWin
     const isWin = canGameEnd && checkWinner(x, y)
-    const isEven = canGameEnd && checkEven()
+    const isEquality = canGameEnd && checkEquality()
 
-    if (isWin || isEven || round === maxRound) {
+    if (isWin || isEquality) {
       endGame(isWin)
     } else {
       nextRound()
     }
   }
 
+  const fillTransposedBoard = (x, y) => {
+    transposedBoard[x][y] = playerRound
+    transposedBoard[y + size][x] = playerRound
+    if (y === x) {
+      transposedBoard[backSlashIndex][x] = playerRound
+    }
+    if (x + y === size - 1) {
+      transposedBoard[slashIndex][x] = playerRound
+    }
+    setTransposedBoard(transposedBoard)
+  }
+
   const checkWinner = (x, y) => {
     const columnWin = board.every(row => row[y] === playerRound)
     const rowWin = board[x].every(box => box === playerRound)
-    const backSlashWin = x === y && checkBackSlashWin()
-    const slashWin = x + y === size - 1 && checkSlashWin()
+    const backSlashWin = x === y && transposedBoard[backSlashIndex].every(box => box === playerRound)
+    const slashWin = x + y === size - 1 && transposedBoard[slashIndex].every(box => box === playerRound)
 
     return columnWin || rowWin || backSlashWin || slashWin
   }
 
-  const checkEven = () => {
-    const transposedBoard = transposeBoard()
-
-    const columnsEven = checkRowEven(transposedBoard)
-    const rowsEven = checkRowEven(board)
-    const backSlashEven = checkDiagonalEven(board)
-    const slashEven = checkDiagonalEven(transposedBoard)
-
-    return columnsEven && rowsEven && backSlashEven && slashEven
-  }
-
-  const checkBackSlashWin = () => {
-    const affectedBoxes = []
-    for (let i = 0; i < size; i++) {
-      affectedBoxes.push(board[i][i])
-    }
-    return affectedBoxes.every(box => box === playerRound)
-  }
-
-  const checkSlashWin = () => {
-    const affectedBoxes = []
-    for (let x = 0; x < size; x++) {
-      const y = size - x - 1
-      affectedBoxes.push(board[x][y])
-    }
-    return affectedBoxes.every(box => box === playerRound)
-  }
-
-  const transposeBoard = () => {
-    const transposedBoard = []
-    for (let i = 0; i < board.length; i++) {
-      for (let j = 0; j < board.length; j++) {
-        if (!Array.isArray(transposedBoard[j])) {
-          transposedBoard[j] = []
-        }
-        transposedBoard[j][i] = board[i][j]
-      }
-    }
-    return transposedBoard
-  }
-
-  const checkRowEven = rows => {
-    return (
-      rows.every(row => row.some(box => box === playerOne)) &&
-      rows.every(row => row.some(box => box === playerTwo))
-    )
-  }
-
-  const checkDiagonalEven = rows => {
-    const diagonal = rows.map((_, i) => rows[i][i])
-    return (
-      diagonal.some(box => box === playerOne) &&
-      diagonal.some(box => box === playerTwo)
-    )
+  const checkEquality = () => {
+    return transposedBoard.every(row => row.some(box => box === playerOne) && row.some(box => box === playerTwo))
   }
 
   const endGame = isWin => {
@@ -141,7 +121,7 @@ function Board({ size }) {
       const confetti = new ConfettiGenerator(confettiSettings)
       confetti.render()
     } else {
-      setWinner('even')
+      setWinner('equality')
     }
   }
 
@@ -164,7 +144,7 @@ function Board({ size }) {
     return (
       <div>
         <canvas id="confetti" />
-        <div className="board" style={boardStyle} onClick={handleClick}>
+        <div className={`board ${winner ? 'game-over' : ''}`} style={boardStyle} onClick={handleClick}>
           {rows}
         </div>
         <GameResult winner={winner} />

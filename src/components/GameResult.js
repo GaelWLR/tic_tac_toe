@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
  */
 function GameResult({ winner }) {
   switch (winner) {
-    case 'even':
+    case 'equality':
       return <p className="game-result-text">Égalité !</p>
     case 'playerOne':
       return <p className="game-result-text">Joueur 1 a gagné !</p>

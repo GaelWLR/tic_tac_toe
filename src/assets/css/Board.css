@@ -5,6 +5,10 @@
   background: white;
 }
 
+.board.game-over {
+  background-color: rgb(230, 230, 230);
+}
+
 .board-row {
   height: var(--box-size);
 }
