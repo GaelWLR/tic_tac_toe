@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import '../assets/css/Board.css'
-import BoardRow from './BoardRow'
 import GameResult from './GameResult'
 import useWindowSize from './../hooks/useWindowSize'
 import ConfettiGenerator from 'confetti-js'
@@ -58,7 +57,11 @@ function Board({ size }) {
   const [transposedBoard, setTransposedBoard] = useState(initTransposedBoard(size))
   const [width, height] = useWindowSize()
 
-  const handleClick = ({ target }) => {
+  /**
+   * Handle click on a board box, play a valid move
+   * @param {Event} event
+   */
+  const handleBoxClick = ({ target }) => {
     if (target.classList.contains('board-box')) {
       const x = parseInt(target.dataset.x)
       const y = parseInt(target.dataset.y)
@@ -71,6 +74,11 @@ function Board({ size }) {
     }
   }
 
+  /**
+   * Play a round and check if it end the game
+   * @param {string} x
+   * @param {string} y
+   */
   const playRound = (x, y) => {
     board[x][y] = playerRound
     setBoard(board)
@@ -88,6 +96,11 @@ function Board({ size }) {
     }
   }
 
+  /**
+   * Fill the transposed board with player move
+   * @param {string} x
+   * @param {string} y
+   */
   const fillTransposedBoard = (x, y) => {
     transposedBoard[x][y] = playerRound
     transposedBoard[y + size][x] = playerRound
@@ -100,6 +113,12 @@ function Board({ size }) {
     setTransposedBoard(transposedBoard)
   }
 
+  /**
+   * Check if the player move make a win
+   * @param {string} x
+   * @param {string} y
+   * @returns {boolean}
+   */
   const checkWinner = (x, y) => {
     const columnWin = board.every(row => row[y] === playerRound)
     const rowWin = board[x].every(box => box === playerRound)
@@ -109,10 +128,18 @@ function Board({ size }) {
     return columnWin || rowWin || backSlashWin || slashWin
   }
 
+  /**
+   * Check if the game is blocked
+   * @returns {boolean}
+   */
   const checkEquality = () => {
     return transposedBoard.every(row => row.some(box => box === playerOne) && row.some(box => box === playerTwo))
   }
 
+  /**
+   * Manage the end game and displays the information about the winner
+   * @param {boolean} isWin
+   */
   const endGame = isWin => {
     if (isWin) {
       setWinner(playerRound)
@@ -125,17 +152,22 @@ function Board({ size }) {
     }
   }
 
+  /**
+   * Changes the active player and adds a round
+   */
   const nextRound = () => {
     setPlayerRound(playerRound === playerOne ? playerTwo : playerOne)
     setRound(round + 1)
   }
 
+  /**
+   * Calculate the size of the boxes to fill the right space
+   */
   const getBoxSize = () => {
     return `${height > width ? width / 2 / size : height / 2 / size}px`
   }
 
   if (size) {
-    const rows = board.map((row, x) => <BoardRow key={x} row={row} x={x} />)
     // The board will always fit in the screen and take the half of the
     const boardStyle = {
       '--box-size': getBoxSize()
@@ -144,8 +176,18 @@ function Board({ size }) {
     return (
       <div>
         <canvas id="confetti" />
-        <div className={`board ${winner ? 'game-over' : ''}`} style={boardStyle} onClick={handleClick}>
-          {rows}
+        <div className={`board ${winner ? 'game-over' : ''}`} style={boardStyle} onClick={handleBoxClick}>
+          {board.map((row, x) => (
+            <div key={x} className="board-row">
+              {row.map((box, y) =>
+                !box ? (
+                  <div key={y} className="board-box" data-x={x} data-y={y}></div>
+                ) : (
+                  <div key={y} className={`board-box box-${box}`} data-x={x} data-y={y}></div>
+                )
+              )}
+            </div>
+          ))}
         </div>
         <GameResult winner={winner} />
       </div>
