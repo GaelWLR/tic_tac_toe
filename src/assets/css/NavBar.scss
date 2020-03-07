@@ -54,6 +54,14 @@
   white-space: nowrap;
 }
 
+#select-new-game-size {
+  text-align: center;
+  font-size: 1.4rem;
+  display: block;
+  width: 80px;
+  margin: 20px auto;
+}
+
 @media screen and (min-width: 768px) {
   .navbar {
     width: var(--navbar-size);

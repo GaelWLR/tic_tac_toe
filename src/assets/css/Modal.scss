@@ -1,0 +1,52 @@
+#modal {
+  background-color: rgba(0, 0, 0, 0.9);
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:empty {
+    display: none;
+  }
+
+  & > div {
+    background-color: white;
+    min-width: 30vw;
+    max-width: 80vw;
+    padding: 2rem;
+    border-radius: 5px;
+    text-align: center;
+  }
+}
+
+.modal-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.modal-button {
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 5px 10px;
+  min-width: max-content;
+  max-width: 35%;
+  flex-grow: 1;
+}
+
+.modal-button.button-accept {
+  background-color: lightsteelblue;
+  border: 1px solid steelblue;
+}
+
+.modal-button.button-decline {
+  background-color: lightcoral;
+  border: 1px solid darkred;
+}
