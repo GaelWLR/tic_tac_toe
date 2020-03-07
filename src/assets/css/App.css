@@ -15,9 +15,6 @@
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
   height: calc(100vh - var(--navbar-size));
   margin-left: 0;
 }

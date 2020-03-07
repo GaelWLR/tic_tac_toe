@@ -1,3 +1,7 @@
+.board-container {
+  padding-top: 20vh;
+}
+
 .board {
   border: 1px solid black;
   width: max-content;
@@ -38,7 +42,15 @@
 #confetti {
   position: absolute;
   top: 0;
-  height: 100vh;
-  width: calc(100vw - var(--navbar-size));
+  height: 100%;
+  width: 100vw;
   z-index: -1;
+}
+
+@media screen and (min-width: 768px) {
+  #confetti {
+    height: 100vh;
+    width: calc(100vw - var(--navbar-size));
+    left: var(--navbar-size);
+  }
 }

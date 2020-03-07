@@ -164,6 +164,9 @@ function Board({ size }) {
    * Calculate the size of the boxes to fill the right space
    */
   const getBoxSize = () => {
+    if (innerWidth < 768) {
+      return `${height > width ? width / 1.5 / size : height / 1.5 / size}px`
+    }
     return `${height > width ? width / 2 / size : height / 2 / size}px`
   }
 
@@ -174,7 +177,7 @@ function Board({ size }) {
     }
 
     return (
-      <div>
+      <div className="board-container">
         <canvas id="confetti" />
         <div className={`board ${winner ? 'game-over' : ''}`} style={boardStyle} onClick={handleBoxClick}>
           {board.map((row, x) => (
