@@ -16,9 +16,13 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-react": "^7.18.3",
     "parcel-bundler": "^1.12.4",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "sass": "^1.26.2"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.27",
+    "@fortawesome/free-solid-svg-icons": "^5.12.1",
+    "@fortawesome/react-fontawesome": "^0.1.9",
     "confetti-js": "0.0.17",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",

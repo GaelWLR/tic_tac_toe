@@ -1,8 +1,30 @@
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
-#app {
-    padding: 10vh 0;
+:root {
+  font-size: 16px;
+  font-family: Tahoma, Geneva, sans-serif;
+  --bg-primary: #255686;
+  --bg-secondary: #1b4064;
+  --text-primary: #dceeff;
+  --text-secondary: #a6c1da;
+  --navbar-size: 5rem;
+  --transition-speed: 0.5s;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: calc(100vh - var(--navbar-size));
+  margin-left: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    height: 100vh;
+    margin-left: var(--navbar-size);
+  }
 }

@@ -97,7 +97,7 @@ function Board({ size }) {
   }
 
   /**
-   * Fill the transposed board with player move
+   * Fills the transposed board with player move
    * @param {string} x
    * @param {string} y
    */
