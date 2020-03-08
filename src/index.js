@@ -1,5 +1,12 @@
 import React from 'react'
 import { render } from 'react-dom'
 import App from './App'
+import { BoardContextProvider } from './context/BoardContext'
 
-render(<App />, document.getElementById('app'))
+const app = (
+  <BoardContextProvider>
+    <App />
+  </BoardContextProvider>
+)
+
+render(app, document.getElementById('app'))

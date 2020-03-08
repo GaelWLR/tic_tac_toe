@@ -16,6 +16,7 @@ npm run dev
 
 ## Features
 
-- change board size (programmatically in App.js at the moment)
+- set new game with different board size
+- replay last game
 - handle two player locally
-- handle win and equality (even before the board is full)
+- handle win and equality, even before the board is full
